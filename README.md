@@ -1,15 +1,13 @@
 # Typical
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/typical`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+This library provides a DSL to describe the types of your data and ways to validate them.
 
 ## Installation
 
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'typical'
+gem "typical"
 ```
 
 And then execute:
@@ -22,7 +20,74 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+### DSL
+
+To specify type information, you can use the `Gravitype::Type::DSL` module.
+
+```ruby
+include Gravitype::Type::DSL
+```
+
+The bang methods are used to define types.
+
+```ruby
+String!                    # => #<Type:String>
+```
+
+You can allow multiple types by creating a union of them.
+
+```ruby
+String! | Integer!         # => #<Type:Union [#<Type:String>, #<Type:Integer>]>
+```
+
+Sometimes a field can also be null.
+
+```ruby
+String! | Integer! | null  # => #<Type:Union [#<Type:String>, , #<Type:Integer>, #<Type:NilClass>]>
+```
+
+If you’re defining a single type, but nullable, use the question mark methods instead.
+
+```ruby
+String?                    # => #<Type:Union [#<Type:String>, #<Type:NilClass>]>
+```
+
+You can have collections too, you use them like you normally would.
+
+```ruby
+Set!(String!, Integer!)    # => #<Type:Set [#<Type:Union [#<Type:String>, #<Type:Integer>]>]>
+Array!(String!, Integer!)  # => #<Type:Array [#<Type:Union [#<Type:String>, #<Type:Integer>]>]>
+Hash!(String! => Integer!) # => #<Type:Hash { [#<Type:Union [#<Type:String>]>] => [#<Type:Union [#<Type:Integer>]>] }>
+```
+
+### Validation
+
+_NOTE: This is not yet implemented._
+
+```ruby
+typing = Array!(String!)
+typing.valid?("string")    # => false
+typing.valid?([nil])       # => false
+typing.valid?([])          # => true
+typing.valid?(["string"])  # => true
+```
+
+### Mongoid
+
+_NOTE: This is not yet implemented._
+
+This Mongoid integration allows you to both reflect on the data types in your database and validate incoming data.
+
+```ruby
+class Artist
+  include Mongoid::Document
+  include Gravitype::Type::DSL
+
+  field :name, type: String?
+  field :image_versions, type: Array!(Symbol!)
+  field :image_urls, type: Hash!(String! => String!)
+end
+```
 
 ## Development
 
@@ -32,10 +97,9 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/typical.
-
+Bug reports and pull requests are welcome on GitHub at https://github.com/alloy/typical.
 
 ## License
 
-The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
+The gem is available as open source under the terms of the [MIT License](LICENSE.txt).
 
