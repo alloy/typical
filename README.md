@@ -22,10 +22,10 @@ Or install it yourself as:
 
 ### DSL
 
-To specify type information, you can use the `Gravitype::Type::DSL` module.
+To specify type information, you can use the `Typical::DSL` module.
 
 ```ruby
-include Gravitype::Type::DSL
+include Typical::DSL
 ```
 
 The bang methods are used to define types.
@@ -81,7 +81,7 @@ This Mongoid integration allows you to both reflect on the data types in your da
 ```ruby
 class Artist
   include Mongoid::Document
-  include Gravitype::Type::DSL
+  include Typical::Mongoid
 
   field :name, type: String?
   field :image_versions, type: Array!(Symbol!)
