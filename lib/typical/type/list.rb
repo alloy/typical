@@ -1,4 +1,3 @@
-require "typical/type"
 require "typical/type/union"
 
 module Typical

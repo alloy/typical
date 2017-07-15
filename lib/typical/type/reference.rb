@@ -1,5 +1,3 @@
-require "typical/type"
-
 module Typical
   class Type
     class Reference < Type
