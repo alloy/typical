@@ -25,6 +25,7 @@ Or install it yourself as:
 To specify type information, you can use the `Typical::DSL` module.
 
 ```ruby
+require "typical/dsl"
 include Typical::DSL
 ```
 
