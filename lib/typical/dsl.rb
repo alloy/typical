@@ -2,10 +2,12 @@ require "typical/type"
 
 module Typical
   module DSL
-    def self.define_scalar_type(mod, name = nil)
-      name ||= mod.name
-      define_method("#{name}!") { Type.new(mod) }
-      define_method("#{name}?") { Type.new(mod) | null }
+    module Define
+      private def define_scalar_type(mod, name = nil)
+        name ||= mod.name.split("::").last
+        define_method("#{name}!") { Type.new(mod) }
+        define_method("#{name}?") { Type.new(mod) | null }
+      end
     end
 
     BUILTIN_SCALAR_TYPES = [
@@ -19,6 +21,7 @@ module Typical
       Time,
     ].freeze
 
+    extend Define
     BUILTIN_SCALAR_TYPES.each do |klass|
       define_scalar_type(klass)
     end
